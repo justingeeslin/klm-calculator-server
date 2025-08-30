@@ -23,7 +23,14 @@ private func klmMessage(for error: KLMError) -> String {
 
 func routes(_ app: Application) throws {
 
-    app.get { req async throws -> Response in
+    // Root serves the Public/index.html file
+   app.get { req async throws -> Response in
+       let path = req.application.directory.publicDirectory + "index.html"
+       return try await req.fileio.asyncStreamFile(at: path)
+   }
+
+
+    app.get("api", "klm") { req async throws -> Response in
         // Validate required query ?q=...
         guard let action: String = try? req.query.get(String.self, at: "q"),
               action.isEmpty == false
