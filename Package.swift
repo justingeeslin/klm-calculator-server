@@ -11,7 +11,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "4.115.0"),
         // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
-        .package(url: "https://github.com/justingeeslin/Persona", branch: "develop"),
+        .package(url: "https://github.com/justingeeslin/Persona", branch: "main"),
     ],
     targets: [
         .executableTarget(
