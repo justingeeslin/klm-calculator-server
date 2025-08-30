@@ -1,1 +1,1 @@
-web: App serve --env production --hostname 0.0.0.0 --port $PORT
+web: KlmCalculatorServer serve --env production --hostname 0.0.0.0 --port $PORT
