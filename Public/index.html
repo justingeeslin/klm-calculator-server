@@ -150,6 +150,10 @@
 		  border-radius: 8px;
 		  padding: 1rem;
 	  }
+	  
+	  .error-message {
+		color: #e74c3c; /* red tone */
+	  }
   </style>
 </head>
 <body>
@@ -158,6 +162,7 @@
   <div style="display: grid;grid-template-columns: 3fr 1fr;">
 	<div>
 		<input id="q" name="q" size="30" required value="M P B">  
+		<div id="error" class="error-message"></div>
 	</div>
 	<div>
 		<div id="loading" class="loading hidden">
@@ -198,32 +203,44 @@
 	  if (!q) {
 		if (currentController) currentController.abort();
 		setLoading(false);
+		clearError();
 		result.textContent = '';
 		return;
 	  }
-  
-	  // Cancel any previous request
+	
 	  if (currentController) currentController.abort();
 	  currentController = new AbortController();
-  
+	
+	const error = document.getElementById('error');
+	
+	function showError(msg) {
+	  error.textContent = msg || '';
+	  result.textContent = '';        // clear estimate on error
+	}
+	
+	function clearError() {
+	  error.textContent = '';
+	}
+	
 	  setLoading(true);
+	  clearError();
+	
 	  try {
 		const res = await fetch(`/api/klm?q=${encodeURIComponent(q)}`, {
 		  signal: currentController.signal
 		});
 		const data = await res.json().catch(() => ({}));
-  
+	
 		if (!res.ok) {
-		  result.textContent = data.message || `Error: ${res.status} ${res.statusText}`;
+		  showError(data.message || `Error: ${res.status} ${res.statusText}`);
 		} else if (typeof data.estimatedTime === 'number') {
 		  result.textContent = `${data.estimatedTime.toFixed(3)}s`;
 		} else {
-		  result.textContent = 'No estimate returned.';
+		  showError('No estimate returned.');
 		}
 	  } catch (err) {
-		// Ignore abort errors (they happen on fast typing)
 		if (err.name !== 'AbortError') {
-		  result.textContent = `Network error: ${err}`;
+		  showError(`Network error: ${err}`);
 		}
 	  } finally {
 		setLoading(false);
