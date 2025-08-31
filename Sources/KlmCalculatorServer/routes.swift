@@ -50,7 +50,7 @@ func routes(_ app: Application) throws {
             return res
         } catch let e as KLMError {
             let payload = KLMTimeResponse(estimatedTime: nil, message: klmMessage(for: e))
-            let res = Response(status: .badRequest)
+            let res = Response(status: .unprocessableEntity)
             try res.content.encode(payload, as: .json)
             return res
         } catch {
