@@ -160,8 +160,15 @@
 	<main id="main">
   <h1>KLM Calculator</h1>
   <form id="klm-form">	
+<fieldset role="radiogroup" aria-labelledby="platform-label">
+	  <legend id="platform-label">Platform</legend>
+	  <label><input type="radio" name="platform" value="desktop" checked> Desktop</label>
+	  <label><input type="radio" name="platform" value="mobile"> Mobile</label>
+	  <label><input type="radio" name="platform" value="watch"> Watch</label>
+  </fieldset>
   <div style="display: grid;grid-template-columns: 3fr 1fr;">
 	<div>
+		
 		<input id="q" name="q" size="30" required value="M P B" autocomplete="off" spellcheck="false" ria-describedby="error">  
 		<div id="error" class="error-message" role="alert" aria-live="assertive"></div>
 	</div>
@@ -229,8 +236,9 @@
 	  setLoading(true);
 	  clearError();
 	
+	  const platform = document.querySelector('input[name="platform"]:checked').value;
 	  try {
-		const res = await fetch(`/api/klm?q=${encodeURIComponent(q)}`, {
+		const res = await fetch(`/api/lm?q=${encodeURIComponent(q)}&platform=${encodeURIComponent(platform)}`, {
 		  signal: currentController.signal
 		});
 		const data = await res.json().catch(() => ({}));
@@ -255,6 +263,12 @@
 	form.addEventListener('submit', (e) => {
 	  e.preventDefault();
 	  estimate(input.value.trim());
+	});
+	
+	document.querySelectorAll('input[name="platform"]').forEach(el => {
+	  el.addEventListener('change', () => {
+		estimate(input.value.trim());
+	  });
 	});
   
 	// Live estimates while typing (debounced)
