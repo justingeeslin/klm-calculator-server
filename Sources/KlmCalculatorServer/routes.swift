@@ -39,7 +39,7 @@ private enum Platform: String {
 private func klmUser(for platform: Platform) -> any InterfaceUser {
     switch platform {
     case .desktop: return DesktopUser()
-    case .mobile:  return DesktopUser()
+    case .mobile:  return MobileUser()
     case .watch:   return WatchUser()
     }
 }
