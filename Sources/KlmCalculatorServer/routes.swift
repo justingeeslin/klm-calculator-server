@@ -43,7 +43,7 @@ func routes(_ app: Application) throws {
         }
 
         do {
-            let t = try WatchUser().taskTime(for: action)
+            let t = try DesktopUser().taskTime(for: action)
             let payload = KLMTimeResponse(estimatedTime: t, message: "ok")
             let res = Response(status: .ok)
             try res.content.encode(payload, as: .json)
