@@ -109,7 +109,7 @@
 	  button:hover { background: var(--button-bg-hover); }
 	  button:active { transform: translateY(1px); }
 	  
-	  pre#result {
+	  output#result {
 		margin: 0;
 		padding: 1rem;
 		
@@ -157,19 +157,21 @@
   </style>
 </head>
 <body>
+	<main id="main">
   <h1>KLM Calculator</h1>
   <form id="klm-form">	
   <div style="display: grid;grid-template-columns: 3fr 1fr;">
 	<div>
-		<input id="q" name="q" size="30" required value="M P B">  
-		<div id="error" class="error-message"></div>
+		<input id="q" name="q" size="30" required value="M P B" autocomplete="off" spellcheck="false" ria-describedby="error">  
+		<div id="error" class="error-message" role="alert" aria-live="assertive"></div>
 	</div>
 	<div>
-		<div id="loading" class="loading hidden">
+		<!-- Polite status for async work -->
+		  <div id="loading" class="loading hidden" role="status" aria-live="polite" aria-atomic="true">
 			<span class="spinner" aria-hidden="true"></span>
 			<span class="loading-text">Calculating…</span>
-		</div>
-		<pre id="result"></pre>
+		  </div>
+		<output id="result" aria-live="polite"></output>
 	</div>
   </div>
   <button>Estimate</button>
@@ -214,11 +216,13 @@
 	const error = document.getElementById('error');
 	
 	function showError(msg) {
+	  input.setAttribute('aria-invalid', 'true');
 	  error.textContent = msg || '';
 	  result.textContent = '';        // clear estimate on error
 	}
 	
 	function clearError() {
+	  input.removeAttribute('aria-invalid');
 	  error.textContent = '';
 	}
 	
